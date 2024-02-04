@@ -19,9 +19,9 @@
        <div class="card">
          <div class="card-body p-0">
            <ul class="list-group rounded-2 list-group-flush" v-if="this.sfuTimetable.timetable
-                .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getUTCDay() + (this.showNextDay ? 1 : 0)).length !== 0">
+                .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getDay() + (this.showNextDay ? 1 : 0)).length !== 0">
              <schedule-item :data="i" v-for="i in this.sfuTimetable.timetable
-                .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getUTCDay() + (this.showNextDay ? 1 : 0))"/>
+                .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getDay() + (this.showNextDay ? 1 : 0))"/>
            </ul>
             <h5 class="w-100 text-center my-4" v-else>Лент нет, можно отдыхать</h5>
          </div>
