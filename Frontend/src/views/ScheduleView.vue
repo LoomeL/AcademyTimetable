@@ -20,8 +20,9 @@
          <div class="card-body p-0">
            <ul class="list-group rounded-2 list-group-flush" v-if="this.sfuTimetable.timetable
                 .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getDay() + (this.showNextDay ? 1 : 0)).length !== 0">
-             <schedule-item :data="i" v-for="i in this.sfuTimetable.timetable
-                .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getDay() + (this.showNextDay ? 1 : 0))"/>
+             <schedule-item :data="i" v-for="i in [...this.sfuTimetable.timetable
+                .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getDay() + (this.showNextDay ? 1 : 0)),
+                ...selectedAcademyTimetable.filter(f => f.date === getFormattedDateOfToday(0, 'yyyy.M.dd'))]"/>
            </ul>
             <h5 class="w-100 text-center my-4" v-else>Лент нет, можно отдыхать</h5>
          </div>
@@ -46,7 +47,11 @@
            <button class="btn btn-outline-primary" :class="{'active': gridMode}" @click="gridMode = true"><i class="fa-regular fa-grid-2"></i></button>
          </div>
          <div>
-           <button class="btn btn-outline-danger"><i class="fa-regular fa-heart"></i> В избранное</button>
+<!--           <button class="btn btn-outline-danger"><i class="fa-regular fa-heart"></i> В избранное</button>-->
+           <select class="form-select" v-model="groupSelector" v-if="academyTimetable !== null" v-on:change="handleSelector()">
+            <option value="0" selected>Выберете...</option>
+             <option v-for="item in  [...new Set(academyTimetable.map(item => item.group))].sort()">{{item}}</option>
+           </select>
          </div>
        </div>
 
@@ -64,11 +69,11 @@
        <div class="card" v-if="!this.gridMode" v-for="item in getTimetableAsObject()">
          <div class="card-header fs-5 fw-bold d-flex justify-content-between">
            <span>{{ this.days[item[0].day - 1] }}</span>
-           <span class="fs-6 text-secondary d-flex align-items-center">{{ getForamatedDateOfWeek(item[0].day - 1) }}</span>
+           <span class="fs-6 text-secondary d-flex align-items-center">{{ getForamatedDateOfWeek(item[0].day - 1, "d MMMM") }}</span>
          </div>
          <div class="card-body p-0">
            <ul class="list-group rounded-2 list-group-flush">
-             <schedule-item :data="i" compact v-for="i in item"/>
+             <schedule-item :data="i" compact v-for="i in [...item, ...selectedAcademyTimetable.filter(f => f.date === getForamatedDateOfWeek(item[0].day - 1, 'yyyy.M.dd'))]"/>
            </ul>
          </div>
        </div>
@@ -115,12 +120,23 @@ export default {
       startOfSelectedWeek: null,
       today: new Date(),
       showNextDay: false,
+      groupSelector: 0,
+      selectedAcademyTimetable: [],
     }
   },
   methods: {
     endOfISOWeek,
     startOfISOWeek,
     format,
+
+    handleSelector() {
+      if (this.groupSelector === 0) {
+        this.selectedAcademyTimetable = []
+      } else {
+        this.selectedAcademyTimetable = this.academyTimetable.filter(item => item.group === this.groupSelector)
+        console.log(this.selectedAcademyTimetable)
+      }
+    },
 
     changeWeek(step) {
       if (this.selectedWeek + step === 0) return;
@@ -137,7 +153,11 @@ export default {
     },
 
     fetchAcademyTimetable() {
-
+      fetch("/ait.json")
+          .then(result => result.json())
+          .then(data => {
+            this.academyTimetable = data
+          })
     },
     toShortInstituteName(name) {
       const institutes = [
@@ -188,14 +208,19 @@ export default {
       return format(addDays(this.today, span), "EEEE, d MMMM", { locale: ru });
     },
 
-    getForamatedDateOfWeek(span) {
-      return format(addDays(this.startOfSelectedWeek, span), "d MMMM", { locale: ru });
-    }
+    getForamatedDateOfWeek(span, dateFormat) {
+      return format(addDays(this.startOfSelectedWeek, span), dateFormat, { locale: ru });
+    },
+
+    getFormattedDateOfToday(span, dateFormat) {
+      return format(addDays(this.today, span), dateFormat, { locale: ru });
+    },
   },
   mounted() {
     this.currentWeek = getISOWeek(this.today)
     this.resetWeekSelector()
     this.fetchSfuTimetable()
+    this.fetchAcademyTimetable()
   }
 }
 </script>
