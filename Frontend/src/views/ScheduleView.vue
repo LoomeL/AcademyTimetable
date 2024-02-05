@@ -22,7 +22,7 @@
                 .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getDay() + (this.showNextDay ? 1 : 0)).length !== 0">
              <schedule-item :data="i" v-for="i in [...this.sfuTimetable.timetable
                 .filter(item => item.week == (this.currentWeek % 2 ? 1 : 2) && item.day == this.today.getDay() + (this.showNextDay ? 1 : 0)),
-                ...selectedAcademyTimetable.filter(f => f.date === getFormattedDateOfToday(0, 'yyyy.M.dd'))]"/>
+                ...selectedAcademyTimetable.filter(f => f.date === getFormattedDateOfToday((this.showNextDay ? 1 : 0), 'yyyy.M.dd'))]"/>
            </ul>
             <h5 class="w-100 text-center my-4" v-else>Лент нет, можно отдыхать</h5>
          </div>
