@@ -81,8 +81,8 @@
            <ul class="list-group rounded-2 list-group-flush">
              <li class="list-group-item p-0">
                <ul class="list-group list-group-horizontal text-center">
-                <li class="list-group-item w-50 border-start-0 border-top-0 border-bottom-0" :class="{'bg-primary bg-opacity-10': currentWeek % 2}"> Нечетная неделя</li>
-                <li class="list-group-item w-50 border-0" :class="{'bg-primary bg-opacity-10': !(currentWeek % 2)}"> Четная неделя</li>
+                <li class="list-group-item w-50 border-start-0 border-top-0 border-bottom-0  rounded-0" :class="{'bg-primary bg-opacity-10': currentWeek % 2}"> Нечетная неделя</li>
+                <li class="list-group-item w-50 border-0  rounded-0" :class="{'bg-primary bg-opacity-10': !(currentWeek % 2)}"> Четная неделя</li>
                </ul>
              </li>
 
@@ -99,7 +99,7 @@
 import ScheduleItem from "@/components/ScheduleItem.vue";
 import {addDays, addWeeks, endOfISOWeek, format, getISOWeek, startOfISOWeek} from "date-fns";
 import {ru} from "date-fns/locale/ru";
-import ScheduleGridItem from "@/views/ScheduleGridItem.vue";
+import ScheduleGridItem from "@/components/ScheduleGridItem.vue";
 
 export default {
   name: "ScheduleView",

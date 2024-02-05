@@ -4,9 +4,10 @@
       <li>
         <h6 class="m-0 fw-medium">{{ data.subject }}</h6>
       </li>
-      <li class="d-flex align-items-center gap-2 "  v-if="data.subject !== 'День военной подготовки' && compact">
+
+      <li class="d-flex align-items-center column-gap-2 flex-wrap"  v-if="data.type !== '' && compact">
         <span class="text-success fw-normal">{{ data.type }}</span>
-        <div class="dot-separator"/>
+        <div class="dot-separator" v-if="data.sync !== ''"/>
         {{ data.sync }}
       </li>
 
@@ -16,32 +17,31 @@
 
       <li class="d-flex align-items-center gap-2 flex-wrap"  v-if="data.subject !== 'День военной подготовки' && !compact">
         {{ data.time }}
-        <div class="dot-separator"/>
+        <div class="dot-separator" v-if="data.type !== ''"/>
         <span class="text-success fw-normal">{{ data.type }}</span>
-        <div class="dot-separator"/>
+        <div class="dot-separator" v-if="data.sync !== ''"/>
         {{ data.sync }}
       </li>
 
-      <li v-if="data.subject !== 'День военной подготовки'">
+      <li v-if="data.place !== ''">
         {{ data.place }}
       </li>
-      <li  v-if="data.subject !== 'День военной подготовки'">
+      <li  v-if="data.teacher !== ''">
         <a href="#" class="text-decoration-none text-body-emphasis">
           {{ data.teacher }}
         </a>
       </li>
-<!--      <li class="fw-normal text-primary">
+      <li class="fw-normal text-primary" v-if="!compact">
         До конца ленты сталось 10 минут
-      </li>-->
+      </li>
     </ul>
-<!--    <div class="position-absolute end-0 top-0 m-2">
-      <div class="position-relative" style="width: 20px; height: 20px; fill: var(&#45;&#45;bs-primary)">
-&lt;!&ndash;        <sfu-logo/>&ndash;&gt;
-        <academy-logo class="position-absolute top-0 start-0"/>
-&lt;!&ndash;        <i class="fa-regular fa-circle-exclamation text-danger fs-5"></i>&ndash;&gt;
-&lt;!&ndash;        По клику открывать модалку в которой будет говориться что за накладка&ndash;&gt;
+    <div class="position-absolute end-0 top-0 m-2" v-if="academyData == undefined">
+      <div class="position-relative" style="width: 20px; height: 20px; fill: var(--bs-primary)">
+        <academy-logo class="position-absolute top-0 start-0" v-if="data === undefined"/>
+        <i class="fa-regular fa-circle-exclamation text-danger fs-5" v-if="data !== undefined"></i>
+<!--        По клику открывать модалку в которой будет говориться что за накладка-->
       </div>
-    </div>-->
+    </div>
   </li>
 </template>
 <script>
@@ -54,6 +54,7 @@ export default {
   props: {
     data: Object,
     compact: Boolean,
+    academyData: Object,
     error: Boolean
   }
 }

@@ -2,7 +2,7 @@
   <nav class="navbar shadow-sm bg-body-tertiary">
     <div class="container-lg justify-content-center">
       <div class="row w-100 g-0">
-        <div class="d-flex col-6 col-lg-4 align-items-center pb-1 mb-1 mb-lg-0">
+        <div class="d-flex col-6 col-lg-4 align-items-center pb-1 mb-1 mb-lg-0" @click="this.$router.push({name: 'home'})">
           <div style="width: 24px; height: 24px; fill: var(--bs-secondary)" class="me-2">
             <AcademyLogo/>
           </div>
