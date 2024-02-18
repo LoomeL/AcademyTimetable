@@ -1,5 +1,5 @@
 <script setup>
-import SearchAutocomplete from '@/pages/SearchAutocomplete.vue'
+import SearchAutocomplete from '@/components/Search/SearchAutocomplete.vue'
 </script>
 
 <template>

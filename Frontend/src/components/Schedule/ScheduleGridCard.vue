@@ -1,5 +1,5 @@
 <template>
-  <div class="card" v-for="i in 5">
+  <div class="card">
     <div class="card-header">Вторник</div>
     <div class="card-body p-0">
       <div class="grid-item__container text-center">

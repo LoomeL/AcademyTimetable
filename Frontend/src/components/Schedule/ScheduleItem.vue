@@ -1,5 +1,5 @@
 <template>
-  <div class="position-relative">
+  <div class="position-relative fw-light">
     <div class="d-flex flex-column gap-1 p-3 z-1">
       <span class="fw-normal">Мобильные приложения</span>
       <div class="d-flex flex-wrap column-gap-2 align-items-center">

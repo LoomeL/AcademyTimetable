@@ -1,0 +1,9 @@
+.schedule-list-border {
+  > :first-child {
+    border: none;
+  }
+
+  > * {
+    border-top: 1px solid var(--bs-border-color);
+  }
+}
