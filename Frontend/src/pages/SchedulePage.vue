@@ -2,6 +2,11 @@
 import ScheduleItem from '@/components/Schedule/ScheduleItem.vue'
 import ScheduleGridCard from '@/components/Schedule/ScheduleGridCard.vue'
 import ScheduleListCard from '@/components/Schedule/ScheduleListCard.vue'
+import AcademyLogo from '@/components/Logos/AcademyLogo.vue'
+import SfuLogo from '@/components/Logos/SfuLogo.vue'
+import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceholder.vue'
+import ScheduleListCardPlaceholder from '@/components/Placeholder/ScheduleListCardPlaceholder.vue'
+import ScheduleGridCardPlaceholder from '@/components/Placeholder/ScheduleGridCardPlaceholder.vue'
 </script>
 
 <template>
@@ -14,7 +19,7 @@ import ScheduleListCard from '@/components/Schedule/ScheduleListCard.vue'
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" v-if="true">
     <div class="card-body">
       <h5 class="mb-0">КИ21-21Б (1 подгруппа)</h5>
       Совмещено с АИТ22-05
@@ -22,6 +27,17 @@ import ScheduleListCard from '@/components/Schedule/ScheduleListCard.vue'
       ИКИТ - институт космических и информационных технологий
       <br />
       <small class="text-body-tertiary">Идет четная неделя</small>
+    </div>
+  </div>
+
+  <div class="card" v-else>
+    <div class="card-body d-flex flex-column gap-2">
+      <div class="placeholder placeholder-wave col-5 rounded-2"></div>
+      <div class="placeholder placeholder-sm placeholder-wave col-4 rounded-2"></div>
+      <hr class="my-1" />
+      <div class="placeholder placeholder-wave col-9 rounded-2"></div>
+      <div class="placeholder placeholder-wave col-7 rounded-2"></div>
+      <div class="placeholder placeholder-sm placeholder-wave col-4 rounded-2"></div>
     </div>
   </div>
 
@@ -49,6 +65,7 @@ import ScheduleListCard from '@/components/Schedule/ScheduleListCard.vue'
   <div class="card">
     <div class="card-body p-0 schedule-list-border">
       <ScheduleItem v-for="i in 3" />
+      <ScheduleItemPlaceholder v-for="i in 3" />
     </div>
   </div>
 
@@ -84,7 +101,11 @@ import ScheduleListCard from '@/components/Schedule/ScheduleListCard.vue'
 
   <!--  <ScheduleAlert/>-->
 
+  <ScheduleListCardPlaceholder />
+
   <ScheduleListCard />
+
+  <ScheduleGridCardPlaceholder v-for="i in 5" />
 
   <ScheduleGridCard v-for="i in 5" />
 </template>

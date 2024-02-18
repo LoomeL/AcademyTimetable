@@ -2,7 +2,7 @@
 import SearchInstitute from '@/components/Search/SearchInstitute.vue'
 import SearchInstituteCourse from '@/components/Search/SearchInstituteCourse.vue'
 import SearchInstituteGroup from '@/components/Search/SearchInstituteGroup.vue'
-import InstitutePlaceholder from '@/components/Placeholder/InstitutePlaceholder.vue'
+import InstitutePlaceholder from '@/components/Placeholder/SearchInstitutePlaceholder.vue'
 import SearchField from '@/components/Search/SearchField.vue'
 </script>
 

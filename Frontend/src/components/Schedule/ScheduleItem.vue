@@ -28,11 +28,3 @@
 import AcademyLogo from '@/components/Logos/AcademyLogo.vue'
 import SfuLogo from '@/components/Logos/SfuLogo.vue'
 </script>
-<style scoped>
-.dot-separator {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: var(--bs-tertiary-color);
-}
-</style>
