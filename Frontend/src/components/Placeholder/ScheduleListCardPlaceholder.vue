@@ -3,12 +3,12 @@ import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceh
 </script>
 
 <template>
-  <div class="card" v-for="i in 5">
+  <div v-for="(item, i) in 5" class="card">
     <div class="card-header">
       <div class="placeholder placeholder-wave rounded-2 col-5 my-1"></div>
     </div>
     <div class="card-body p-0 schedule-list-border">
-      <ScheduleItemPlaceholder v-for="i in 3" />
+      <ScheduleItemPlaceholder v-for="(item, i) in 3"/>
     </div>
   </div>
 </template>

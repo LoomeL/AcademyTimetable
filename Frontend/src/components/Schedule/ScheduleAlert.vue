@@ -3,7 +3,7 @@
     <i class="fa-solid fa-warning fs-4 mt-1"></i>
     <span>
       В режиме отображения "сетка" расписание академии ИТ не отображается!
-      <a href="#" class="text-danger-emphasis">Больше не показывать</a></span
+      <a class="text-danger-emphasis" href="#">Больше не показывать</a></span
     >
   </div>
 </template>

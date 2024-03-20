@@ -1,131 +1,137 @@
 <template>
-    <template v-if="loading">
-      <ScheduleHeaderPlaceholder/>
+  <template v-if="loading">
+    <ScheduleHeaderPlaceholder/>
 
+    <div class="d-flex gap-3">
+      <div v-for="(item, i) in 2"
+           class="card w-50 d-flex justify-content-center align-items-center flex-column gap-2 p-2">
+        <div class="placeholder placeholder-wave col-5 rounded-2"></div>
+        <div class="placeholder placeholder-sm placeholder-wave col-7 rounded-2"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body p-0 schedule-list-border">
+        <ScheduleItemPlaceholder v-for="(item, i) in 3"/>
+      </div>
+    </div>
+
+    <div class="d-flex gap-3 align-items-start">
+      <div class="btn-group">
+        <button :class="{'active': !settingsStore.settings.gridView}" class="btn btn-outline-primary"
+                @click="settingsStore.settings.gridView = false">
+          <i class="fa-solid fa-list"></i>
+        </button>
+        <button :class="{'active': settingsStore.settings.gridView}" class="btn btn-outline-primary"
+                @click="settingsStore.settings.gridView = true">
+          <i class="fa-solid fa-grip"></i>
+        </button>
+      </div>
+    </div>
+
+    <template v-if="!settingsStore.settings.gridView">
       <div class="d-flex gap-3">
-        <div class="card w-50 d-flex justify-content-center align-items-center flex-column gap-2 p-2" v-for="(item, i) in 2">
-          <div class="placeholder placeholder-wave col-5 rounded-2"></div>
-          <div class="placeholder placeholder-sm placeholder-wave col-7 rounded-2"></div>
+        <div class="card w-50 d-flex justify-content-center align-items-center flex-column gap-2 p-2">
+          <div class="placeholder placeholder-wave col-7 rounded-2"></div>
+        </div>
+        <div class="card w-50 d-flex justify-content-center align-items-center flex-column gap-2 p-2">
+          <div class="placeholder placeholder-wave col-7 rounded-2"></div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-body p-0 schedule-list-border">
-          <ScheduleItemPlaceholder v-for="(item, i) in 3"/>
-        </div>
-      </div>
-
-      <div class="d-flex gap-3 align-items-start">
-        <div class="btn-group">
-          <button class="btn btn-outline-primary" :class="{'active': !settingsStore.settings.gridView}"
-                  @click="settingsStore.settings.gridView = false">
-            <i class="fa-solid fa-list"></i>
-          </button>
-          <button class="btn btn-outline-primary" :class="{'active': settingsStore.settings.gridView}"
-                  @click="settingsStore.settings.gridView = true">
-            <i class="fa-solid fa-grip"></i>
-          </button>
-        </div>
-      </div>
-
-      <template v-if="!settingsStore.settings.gridView">
-        <div class="d-flex gap-3">
-          <div class="card w-50 d-flex justify-content-center align-items-center flex-column gap-2 p-2">
-            <div class="placeholder placeholder-wave col-7 rounded-2"></div>
-          </div>
-          <div class="card w-50 d-flex justify-content-center align-items-center flex-column gap-2 p-2">
-            <div class="placeholder placeholder-wave col-7 rounded-2"></div>
-          </div>
-        </div>
-
-        <ScheduleListCardPlaceholder/>
-      </template>
-
-      <ScheduleGridCardPlaceholder v-else/>
-
+      <ScheduleListCardPlaceholder/>
     </template>
 
-    <template v-else>
-      <ScheduleHeader :target="rawSfuTT.target"
-                      :teacher="rawSfuTT.type === 'teacher'"
-                      :institute-name="rawSfuTT.institute"
-                      :institute-short-name="institutesShortNameObj[rawSfuTT.institute]"/>
+    <ScheduleGridCardPlaceholder v-else/>
 
-      <div class="d-flex gap-3">
-        <div class="btn btn-outline-secondary w-50" :class="{'active': !showNextDay, 'text-body-secondary': showNextDay}"
-             @click="showNextDay = false">
-          <h5 class="m-0">Сегодня</h5>
-          <span class="text-body-secondary">{{toDateString("EEEEEE, d MMMM", today)}}</span>
-        </div>
-        <div class="btn btn-outline-secondary w-50" :class="{'active': showNextDay, 'text-body-secondary': !showNextDay}"
-             @click="showNextDay = true">
-          <h5 class="m-0">Завтра</h5>
-          <span class="text-body-secondary">{{toDateString("EEEEEE, d MMMM", addDays(today, 1))}}</span>
+  </template>
+
+  <template v-else>
+    <ScheduleHeader :institute-name="rawSfuTT.institute"
+                    :institute-short-name="institutesShortNameObj[rawSfuTT.institute]"
+                    :target="rawSfuTT.target"
+                    :teacher="rawSfuTT.type === 'teacher'"/>
+
+    <div class="d-flex gap-3">
+      <div :class="{'active': !showNextDay, 'text-body-secondary': showNextDay}" class="btn btn-outline-secondary w-50"
+           @click="showNextDay = false">
+        <h5 class="m-0">Сегодня</h5>
+        <span class="text-body-secondary">{{ toDateString("EEEEEE, d MMMM", today) }}</span>
+      </div>
+      <div :class="{'active': showNextDay, 'text-body-secondary': !showNextDay}" class="btn btn-outline-secondary w-50"
+           @click="showNextDay = true">
+        <h5 class="m-0">Завтра</h5>
+        <span class="text-body-secondary">{{ toDateString("EEEEEE, d MMMM", addDays(today, 1)) }}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body p-0 schedule-list-border">
+        <ScheduleItem v-for="schedule in currentSchedule" :sfu-t-t="schedule" show-time/>
+      </div>
+    </div>
+
+    <div class="d-flex gap-3 align-items-start">
+      <div class="btn-group">
+        <button :class="{'active': !settingsStore.settings.gridView}" class="btn btn-outline-primary"
+                @click="settingsStore.settings.gridView = false">
+          <i class="fa-solid fa-list"></i>
+        </button>
+        <button :class="{'active': settingsStore.settings.gridView}" class="btn btn-outline-primary"
+                @click="settingsStore.settings.gridView = true">
+          <i class="fa-solid fa-grip"></i>
+        </button>
+      </div>
+      <div v-if="showFavorites" class="d-flex gap-3 overflow-x-auto">
+        <button v-for="i in profilesStore.profiles"
+                v-if="profilesStore.profiles.length !== 0"
+                :class="{'active': profilesStore.selectedProfile === i}"
+                class="btn btn-outline-primary flex-shrink-0" @click="profilesStore.selectedProfile = i">
+          {{ i.name }}
+        </button>
+      </div>
+    </div>
+
+    <template v-if="!settingsStore.settings.gridView">
+      <div v-if="rawAitTT !== undefined" class="d-flex gap-3">
+        <button class="btn btn-outline-primary"><i class="fa-solid fa-house"></i></button>
+        <div class="d-flex flex-grow-1 justify-content-between align-items-center">
+          <button class="btn btn-outline-primary"><i class="fa-solid fa-arrow-left"></i></button>
+          <span>6 неделя / 05.02 - 11.02</span>
+          <button class="btn btn-outline-primary"><i class="fa-solid fa-arrow-right"></i></button>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-body p-0 schedule-list-border">
-          <ScheduleItem :sfu-t-t="schedule" v-for="schedule in currentSchedule" show-time/>
-        </div>
+      <div v-else class="d-flex gap-3 bg-body">
+        <button :class="{'active': showAnotherWeek ? isEvenWeek: !isEvenWeek,'text-body-secondary': !showAnotherWeek ? isEvenWeek: !isEvenWeek}"
+                class="btn btn-outline-secondary w-50"
+                @click="showAnotherWeek = !showAnotherWeek">Нечетная неделя
+        </button>
+        <button :class="{'active': !showAnotherWeek ? isEvenWeek: !isEvenWeek, 'text-body-secondary': showAnotherWeek ? isEvenWeek: !isEvenWeek}"
+                class="btn btn-outline-secondary w-50"
+                @click="showAnotherWeek = !showAnotherWeek">Четная неделя
+        </button>
       </div>
 
-      <div class="d-flex gap-3 align-items-start">
-        <div class="btn-group">
-          <button class="btn btn-outline-primary" :class="{'active': !settingsStore.settings.gridView}"
-                  @click="settingsStore.settings.gridView = false">
-            <i class="fa-solid fa-list"></i>
-          </button>
-          <button class="btn btn-outline-primary" :class="{'active': settingsStore.settings.gridView}"
-                  @click="settingsStore.settings.gridView = true">
-            <i class="fa-solid fa-grip"></i>
-          </button>
-        </div>
-        <div class="d-flex gap-3 overflow-x-auto" v-if="showFavorites">
-          <button class="btn btn-outline-primary flex-shrink-0"
-                  :class="{'active': profilesStore.selectedProfile === i}"
-                  @click="profilesStore.selectedProfile = i"
-                  v-for="i in profilesStore.profiles" v-if="profilesStore.profiles.length !== 0">
-            {{i.name}}
-          </button>
-        </div>
-      </div>
-
-      <template v-if="!settingsStore.settings.gridView">
-        <div class="d-flex gap-3" v-if="rawAitTT !== undefined">
-          <button class="btn btn-outline-primary"><i class="fa-solid fa-house"></i></button>
-          <div class="d-flex flex-grow-1 justify-content-between align-items-center">
-            <button class="btn btn-outline-primary"><i class="fa-solid fa-arrow-left"></i></button>
-            <span>6 неделя / 05.02 - 11.02</span>
-            <button class="btn btn-outline-primary"><i class="fa-solid fa-arrow-right"></i></button>
-          </div>
-        </div>
-
-        <div class="d-flex gap-3 bg-body" v-else>
-          <button class="btn btn-outline-secondary w-50" :class="{'active': showAnotherWeek ? isEvenWeek: !isEvenWeek,'text-body-secondary': !showAnotherWeek ? isEvenWeek: !isEvenWeek}"
-                  @click="showAnotherWeek = !showAnotherWeek">Нечетная неделя</button>
-          <button class="btn btn-outline-secondary w-50" :class="{'active': !showAnotherWeek ? isEvenWeek: !isEvenWeek, 'text-body-secondary': showAnotherWeek ? isEvenWeek: !isEvenWeek}"
-                  @click="showAnotherWeek = !showAnotherWeek">Четная неделя</button>
-        </div>
-
-        <ScheduleListCard :data="day" :day-of-week="days[key - 1]" date-string="" v-for="(day, key) in weeklyScheduleList"/>
-      </template>
-
-      <ScheduleGridCard :data="day" :day-of-week="days[key - 1]" :highlight-even="isEvenWeek" v-for="(day, key) in weeklyScheduleGrid" v-else/>
-
+      <ScheduleListCard v-for="(day, key) in weeklyScheduleList" :data="day" :day-of-week="days[key - 1]"
+                        date-string=""/>
     </template>
+
+    <ScheduleGridCard v-for="(day, key) in weeklyScheduleGrid" v-else :data="day"
+                      :day-of-week="days[key - 1]" :highlight-even="isEvenWeek"/>
+
+  </template>
 </template>
 <script setup>
-import {institutesShortNameObj, useSearchStore} from "@/stores/search.js";
+import {institutesShortNameObj} from "@/stores/search.js";
 import ScheduleHeader from "@/components/Schedule/ScheduleHeader.vue";
 import ScheduleHeaderPlaceholder from "@/components/Placeholder/ScheduleHeaderPlaceholder.vue";
-import {computed, onMounted, ref, watch} from "vue";
-import {fetchSfuTT} from "@/utils/requests.js";
+import {computed, ref} from "vue";
 import ScheduleItem from "@/components/Schedule/ScheduleItem.vue";
 import {useSettingsStore} from "@/stores/settings.js";
 import ScheduleListCard from "@/components/Schedule/ScheduleListCard.vue";
 import ScheduleGridCard from "@/components/Schedule/ScheduleGridCard.vue";
-import {currentDayOfWeek, currentWeek, isEvenWeek, toDateString, today} from "../utils/date.js";
+import {currentWeek, isEvenWeek, toDateString, today} from "../utils/date.js";
 import {addDays} from "date-fns";
 import {useProfilesStore} from "@/stores/profiles.js";
 import ScheduleItemPlaceholder from "@/components/Placeholder/ScheduleItemPlaceholder.vue";

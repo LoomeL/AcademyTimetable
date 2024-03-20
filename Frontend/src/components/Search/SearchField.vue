@@ -1,12 +1,14 @@
 <template>
   <div class="position-relative">
     <div class="input-group">
-      <input class="form-control" type="text" placeholder="Начни вводить группу или фамилию" v-model="searchValueModel" @focusin="showAutoComplete = true" @focusout="showAutoComplete = false" />
+      <input v-model="searchValueModel" class="form-control" placeholder="Начни вводить группу или фамилию" type="text"
+             @focusin="showAutoComplete = true" @focusout="showAutoComplete = false"/>
       <button class="btn btn-outline-secondary" @click="searchValueModel = ''"><i class="fa-regular fa-x"></i></button>
     </div>
 
     <transition>
-      <SearchAutocomplete :handler="handleSelect" :list="searchStore.autoCompleteData" v-if="showAutoComplete && searchStore.autoCompleteData.length > 0" />
+      <SearchAutocomplete v-if="showAutoComplete && searchStore.autoCompleteData.length > 0" :handler="handleSelect"
+                          :list="searchStore.autoCompleteData"/>
     </transition>
   </div>
 </template>
@@ -23,7 +25,7 @@ const searchStore = useSearchStore()
 const searchValueModel = computed({
   get: () => searchStore.searchValue,
   set: (nv) => {
-    if(nv === '') searchStore.selectedGroup = ''
+    if (nv === '') searchStore.selectedGroup = ''
     searchStore.searchValue = nv
   }
 })

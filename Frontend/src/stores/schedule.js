@@ -1,5 +1,7 @@
 import {defineStore} from "pinia";
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import {fetchAitTT} from "@/utils/requests.js";
+import {computedAsync} from "@vueuse/core";
 
 export const useScheduleStore = defineStore("schedule", () => {
     const liveDate = ref(new Date())
@@ -10,5 +12,13 @@ export const useScheduleStore = defineStore("schedule", () => {
         liveDate.value = new Date()
     }, 1000)
 
-    return {liveDate}
+    const aitTT = computedAsync(async () => {
+        return await fetchAitTT()
+    }, [])
+
+    const aitGroups = computed(() => {
+        return [...new Set(aitTT.value.map(obj => obj.group))]
+    })
+
+    return {liveDate, aitTT, aitGroups}
 })

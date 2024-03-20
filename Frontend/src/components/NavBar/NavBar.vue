@@ -15,7 +15,7 @@
 </template>
 <script setup>
 import NavItem from '@/components/NavBar/NavItem.vue'
-import { useNavigationStore } from '@/stores/navigation.js'
+import {useNavigationStore} from '@/stores/navigation.js'
 
 const nav = useNavigationStore()
 </script>

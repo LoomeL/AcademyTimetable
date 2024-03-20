@@ -1,10 +1,10 @@
 <template>
   <div class="card">
     <div class="card-header d-flex justify-content-between">
-      <span>{{dayOfWeek}}</span> <span class="text-body-secondary">{{dateString}}</span>
+      <span>{{ dayOfWeek }}</span> <span class="text-body-secondary">{{ dateString }}</span>
     </div>
     <div class="card-body p-0 schedule-list-border">
-      <ScheduleItem :sfu-t-t="item" v-for="(item, i) in data"/>
+      <ScheduleItem v-for="(item, i) in data" :sfu-t-t="item"/>
     </div>
   </div>
 </template>

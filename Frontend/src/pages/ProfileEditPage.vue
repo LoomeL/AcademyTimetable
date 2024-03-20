@@ -11,26 +11,30 @@
   </div>
 
   <div>
-    <label for="profileName" class="form-label">Имя профиля</label>
-    <input type="text" class="form-control" id="profileName" v-model="profile.name" :class="isValidName" />
+    <label class="form-label" for="profileName">Имя профиля</label>
+    <input id="profileName" v-model="profile.name" :class="isValidName" class="form-control" type="text"/>
     <div class="invalid-feedback">Поле не может быть пустым</div>
   </div>
 
   <div class="position-relative">
-    <label for="primaryGroup" class="form-label">Основная группа</label>
-    <input type="text" class="form-control" id="primaryGroup" :class="isValidSfuGroup" v-model="profile.sfu" @focusin="sfuShowAutoComplete = true" @focusout="sfuShowAutoComplete = false"/>
+    <label class="form-label" for="primaryGroup">Основная группа</label>
+    <input id="primaryGroup" v-model="profile.sfu" :class="isValidSfuGroup" class="form-control" type="text"
+           @focusin="sfuShowAutoComplete = true" @focusout="sfuShowAutoComplete = false"/>
 
     <transition>
-      <SearchAutocomplete :handler="selectSfuGroup" :list="sfuAutoCompleteData" v-if="sfuShowAutoComplete && sfuAutoCompleteData.length > 0"/>
+      <SearchAutocomplete v-if="sfuShowAutoComplete && sfuAutoCompleteData.length > 0" :handler="selectSfuGroup"
+                          :list="sfuAutoCompleteData"/>
     </transition>
   </div>
 
   <div class="position-relative">
-    <label for="secondaryGroup" class="form-label">Группа академии ИТ</label>
-    <input type="text" class="form-control" id="secondaryGroup" :class="isValidAitGroup" v-model="profile.ait" @focusin="aitShowAutoComplete = true" @focusout="aitShowAutoComplete = false"/>
+    <label class="form-label" for="secondaryGroup">Группа академии ИТ</label>
+    <input id="secondaryGroup" v-model="profile.ait" :class="isValidAitGroup" class="form-control" type="text"
+           @focusin="aitShowAutoComplete = true" @focusout="aitShowAutoComplete = false"/>
 
     <transition>
-      <SearchAutocomplete :handler="selectAitGroup" :list="aitAutoCompleteData" v-if="aitShowAutoComplete && aitAutoCompleteData.length > 0"/>
+      <SearchAutocomplete v-if="aitShowAutoComplete && aitAutoCompleteData.length > 0" :handler="selectAitGroup"
+                          :list="aitAutoCompleteData"/>
     </transition>
   </div>
 
@@ -38,8 +42,9 @@
     <button class="btn btn-outline-danger" @click="profilesStore.removeSelected()">
       <i class="fa-solid fa-remove"></i> Удалить профиль
     </button>
-    <button class="btn btn-outline-primary" :disabled="!isValidForm"
-    @click="profilesStore.handleSave()"><i class="fa-solid fa-save"></i> Сохранить</button>
+    <button :disabled="!isValidForm" class="btn btn-outline-primary"
+            @click="profilesStore.handleSave()"><i class="fa-solid fa-save"></i> Сохранить
+    </button>
   </div>
 </template>
 
@@ -49,8 +54,10 @@ import {useProfilesStore} from "@/stores/profiles.js";
 import {computedAsync} from "@vueuse/core";
 import {fetchAutoComplete} from "@/utils/requests.js";
 import {computed, ref} from "vue";
+import {useScheduleStore} from "@/stores/schedule.js";
 
 const profilesStore = useProfilesStore();
+const scheduleStore = useScheduleStore();
 
 const profile = profilesStore.editorSelectedProfile
 
@@ -80,8 +87,7 @@ const aitShowAutoComplete = ref(false)
 
 const aitAutoCompleteData = computedAsync(async () => {
   if (profile.ait === "") return []
-  const data = await fetchAutoComplete(profile.ait)
-  return Object.keys(data).splice(0, 6)
+  return scheduleStore.aitGroups.filter((item) => item.toLowerCase().startsWith(profile.ait.toLowerCase())).sort()
 }, [profile.ait])
 
 const isValidAitGroup = computed(() => {

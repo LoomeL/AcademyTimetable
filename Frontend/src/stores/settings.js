@@ -1,5 +1,5 @@
 import {ref, watch} from 'vue'
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 
 export const useSettingsStore = defineStore('settings', () => {
 
@@ -22,9 +22,9 @@ export const useSettingsStore = defineStore('settings', () => {
     const settings = ref(getSettings())
 
     watch(settings, (nv) => {
-        document.body.setAttribute("data-bs-theme", nv.darkTheme ? 'dark':'')
+        document.body.setAttribute("data-bs-theme", nv.darkTheme ? 'dark' : '')
         localStorage.setItem("settings", JSON.stringify(nv))
     }, {deep: true})
 
-    return { settings }
+    return {settings}
 })

@@ -1,10 +1,11 @@
 <template>
-  <div class="card" v-if="true">
+  <div v-if="true" class="card">
     <div class="card-body">
       <h5 class="mb-0">{{ target }}</h5>
-      {{ait}}
+      {{ ait }}
       <hr class="my-2"/>
-      <span v-if="!teacher">{{instituteShortName !== undefined ? instituteShortName + ' - ' + instituteName : instituteName}}</span>
+      <span
+          v-if="!teacher">{{ instituteShortName !== undefined ? instituteShortName + ' - ' + instituteName : instituteName }}</span>
       <span v-else>Преподователь</span>
       <br/>
       <small class="text-body-tertiary">Идет четная неделя</small>

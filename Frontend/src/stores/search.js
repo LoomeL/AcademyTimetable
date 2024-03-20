@@ -1,5 +1,5 @@
 import {computed, ref, watch} from 'vue'
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import {computedAsync} from "@vueuse/core";
 import {fetchAutoComplete, fetchInstitutes} from "@/utils/requests.js";
 import {useNavigationStore} from "@/stores/navigation.js";
@@ -37,7 +37,7 @@ export const institutesShortNameObj = institutesShortName.reduce((obj, [full, sh
 
 const reduceInstitutes = (inst) => {
     return inst.reduce((accumulator, item) => {
-        const { institute, department, course } = item;
+        const {institute, department, course} = item;
 
         if (!accumulator[institute]) {
             accumulator[institute] = {};
@@ -81,19 +81,19 @@ export const useSearchStore = defineStore('search', () => {
         nav.currentPage = 'SearchPage'
         window.scrollTo(0, 0)
     })
-/*
-    const fetchInstitutes = () =>  {
-        setTimeout(async () => {
-            const institutesResponse = await fetch("https://edu.sfu-kras.ru/api/timetable/get_insts")
+    /*
+        const fetchInstitutes = () =>  {
+            setTimeout(async () => {
+                const institutesResponse = await fetch("https://edu.sfu-kras.ru/api/timetable/get_insts")
 
-            if (institutesResponse.ok) {
-                rawInstitutes.value = await institutesResponse.json()
-                institutes.value = reduceInstitutes(rawInstitutes.value)
-            } else {
-                rawInstitutes.value = []
-            }
-        }, 500)
-    }*/
+                if (institutesResponse.ok) {
+                    rawInstitutes.value = await institutesResponse.json()
+                    institutes.value = reduceInstitutes(rawInstitutes.value)
+                } else {
+                    rawInstitutes.value = []
+                }
+            }, 500)
+        }*/
 
-    return { searchValue, institutes, autoCompleteData, loading, selectedGroup }
+    return {searchValue, institutes, autoCompleteData, loading, selectedGroup}
 })

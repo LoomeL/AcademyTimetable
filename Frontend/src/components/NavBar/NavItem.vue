@@ -1,9 +1,9 @@
 <template>
   <div
-    class="d-flex fs-4 py-3 px-5"
-    :class="{ 'text-body-tertiary': !active, 'text-body-color': active }"
+      :class="{ 'text-body-tertiary': !active, 'text-body-color': active }"
+      class="d-flex fs-4 py-3 px-5"
   >
-    <slot />
+    <slot/>
   </div>
 </template>
 <script setup>

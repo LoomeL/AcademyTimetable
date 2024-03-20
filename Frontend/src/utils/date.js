@@ -1,4 +1,4 @@
-import {format, getISOWeek, parse} from "date-fns";
+import {format, getISOWeek} from "date-fns";
 import {ru} from "date-fns/locale/ru";
 
 export const today = new Date()
@@ -12,5 +12,5 @@ export const currentTime = format(today, "HH:mm")
 export const isEvenWeek = !(currentWeek % 2)
 
 export const toDateString = (stringFormat, date) => {
-    return format(date, stringFormat, { locale: ru })
+    return format(date, stringFormat, {locale: ru})
 }

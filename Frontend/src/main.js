@@ -1,5 +1,5 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import {createApp} from 'vue'
+import {createPinia} from 'pinia'
 import App from './App.vue'
 
 import './assets/common.scss'
@@ -17,4 +17,4 @@ app.use(createPinia())
 app.mount('#app')
 
 const settingsStore = useSettingsStore()
-document.body.setAttribute("data-bs-theme", settingsStore.settings.darkTheme ? 'dark':'')
+document.body.setAttribute("data-bs-theme", settingsStore.settings.darkTheme ? 'dark' : '')

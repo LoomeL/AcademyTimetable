@@ -1,7 +1,6 @@
-
 <template>
 
-  <div class="d-flex flex-column align-items-center" v-if="profilesStore.profiles.length === 0">
+  <div v-if="profilesStore.profiles.length === 0" class="d-flex flex-column align-items-center">
     <h4 class="mt-3">
       Как-то здесь пустовато <span style="font-family: 'Noto Color Emoji', sans-serif">😕</span>
     </h4>
@@ -10,11 +9,12 @@
       поиска
     </p>
     <div class="d-flex justify-content-center">
-      <button class="btn btn-outline-primary" @click="nav.currentPage = 'SearchPage'">Найти расписание <i class="fa-solid fa-arrow-right"></i></button>
+      <button class="btn btn-outline-primary" @click="nav.currentPage = 'SearchPage'">Найти расписание <i
+          class="fa-solid fa-arrow-right"></i></button>
     </div>
   </div>
 
-  <Schedule :raw-sfu-t-t="sfu" :loading="!sfu" show-favorites v-else/>
+  <Schedule v-else :loading="!sfu" :raw-sfu-t-t="sfu" show-favorites/>
 </template>
 <script setup>
 
@@ -27,7 +27,7 @@ import {fetchSfuTT} from "@/utils/requests.js";
 const nav = useNavigationStore()
 const profilesStore = useProfilesStore()
 
-const sfu = computedAsync( async () => {
+const sfu = computedAsync(async () => {
   return profilesStore.selectedProfile.sfu ? await fetchSfuTT(profilesStore.selectedProfile.sfu) : undefined
 })
 //
