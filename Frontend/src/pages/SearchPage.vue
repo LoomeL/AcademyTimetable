@@ -2,14 +2,14 @@
   <template v-if="searchStore.selectedGroup === ''">
     <SearchField/>
 
-    <InstitutePlaceholder v-if="searchStore.loading" v-for="i in 7"/>
+    <InstitutePlaceholder v-if="searchStore.loading" v-for="i in 12"/>
 
-    <SearchInstitute :short-name="institutesShortNameObj[name]" :name="name" :show="Object.keys(searchStore.institutes).length === 1" v-for="(departments, name) in searchStore.institutes">
+    <SearchInstitute :short-name="institutesShortNameObj[name]" :name="name" v-for="(departments, name) in searchStore.institutes">
       <div class="d-flex gap-2 flex-column" v-for="(courses, departmentName) in departments">
         <h5 class="ms-3 mb-0">
           {{departmentName}}
         </h5>
-        <SearchInstituteCourse :show="Object.keys(courses).length === 1" :name="courseName" v-for="(groups, courseName) in courses">
+        <SearchInstituteCourse :name="courseName" v-for="(groups, courseName) in courses">
           <SearchInstituteGroup v-for="group in groups" @click="searchStore.selectedGroup = group">
             {{group}}
           </SearchInstituteGroup>
@@ -28,8 +28,7 @@
       </div>
     </div>
 
-    <Schedule :raw-sfu-t-t="sfu" v-if="sfu && Object.keys(sfu).length !== 0"/>
-    <ScheduleHeaderPlaceholder v-else/>
+    <Schedule :raw-sfu-t-t="sfu" :loading="!sfu"/>
 
   </template>
 </template>
@@ -56,15 +55,11 @@ const isExistInProfiles = computed(() => {
 })
 
 const sfu = computedAsync( async () => {
-   return searchStore.selectedGroup ? await fetchSfuTT(searchStore.selectedGroup) : {}
+   return searchStore.selectedGroup !== "" ? await fetchSfuTT(searchStore.selectedGroup) : undefined
 })
 
 const addToProfiles = () => {
   if (!isExistInProfiles.value) profilesStore.profiles.push({id: profilesStore.profiles.length, name: searchStore.selectedGroup, sfu: searchStore.selectedGroup, ait: ""})
 }
-
-onMounted(() => {
-  searchStore.fetchInstitutes()
-})
 
 </script>

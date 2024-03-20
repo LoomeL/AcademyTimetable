@@ -82,7 +82,10 @@
           </button>
         </div>
         <div class="d-flex gap-3 overflow-x-auto" v-if="showFavorites">
-          <button class="btn btn-outline-primary flex-shrink-0" v-for="i in profilesStore.profiles" v-if="profilesStore.profiles.length !== 0">
+          <button class="btn btn-outline-primary flex-shrink-0"
+                  :class="{'active': profilesStore.selectedProfile === i}"
+                  @click="profilesStore.selectedProfile = i"
+                  v-for="i in profilesStore.profiles" v-if="profilesStore.profiles.length !== 0">
             {{i.name}}
           </button>
         </div>
@@ -128,9 +131,11 @@ import {useProfilesStore} from "@/stores/profiles.js";
 import ScheduleItemPlaceholder from "@/components/Placeholder/ScheduleItemPlaceholder.vue";
 import ScheduleListCardPlaceholder from "@/components/Placeholder/ScheduleListCardPlaceholder.vue";
 import ScheduleGridCardPlaceholder from "@/components/Placeholder/ScheduleGridCardPlaceholder.vue";
+import {useNavigationStore} from "@/stores/navigation.js";
 
 const settingsStore = useSettingsStore()
 const profilesStore = useProfilesStore()
+const nav = useNavigationStore()
 
 const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
 

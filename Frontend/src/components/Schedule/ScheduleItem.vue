@@ -35,6 +35,7 @@ import {computed, onMounted, onUnmounted, ref} from "vue";
 import {useSearchStore} from "@/stores/search.js";
 import {differenceInMinutes, parse} from "date-fns";
 import {useScheduleStore} from "@/stores/schedule.js";
+import {useNavigationStore} from "@/stores/navigation.js";
 
 const searchStore = useSearchStore()
 
@@ -58,18 +59,22 @@ const timeMessage = computed(() => {
   const startTime = parse(time.value[0], 'HH:mm', scheduleStore.liveDate);
   const endTime = parse(time.value[1], 'HH:mm', scheduleStore.liveDate);
 
-  function formatMinutes(n) {
-    if (n === 1 || n === -1) {
-      return `${Math.abs(n)} минута`;
-    } else if (n > 1 || n < -1) {
-      return `${Math.abs(n)} минут`;
+  function formatMinutes(num) {
+    if (num >= 11 && num <= 14) {
+      return `${num} минут`;
+    }
+    const lastDigit = num % 10;
+    if (lastDigit === 1) {
+      return `${num} минута`;
+    } else if (lastDigit >= 2 && lastDigit <= 4) {
+      return `${num} минуты`;
     } else {
-      return `${Math.abs(n)} минуты`;
+      return `${num} минут`;
     }
   }
 
   const startDiff = differenceInMinutes(scheduleStore.liveDate, startTime)
-  const endDiff = differenceInMinutes(endTime, scheduleStore.liveDate)
+  const endDiff = differenceInMinutes(endTime, scheduleStore.liveDate) + 1
 
   if (scheduleStore.liveDate < startTime) {
     if (Math.abs(startDiff) > 10) return
@@ -81,13 +86,11 @@ const timeMessage = computed(() => {
       return `Только что началась`
     }
 
-    const avg = 20;
-
-    if (startDiff >= 5 && startDiff <= avg) {
+    if (startDiff >= 5 && startDiff <= 20) {
       return `Началась ${formatMinutes(startDiff)} назад`
     }
 
-    if (endDiff <= avg) {
+    if (scheduleStore.liveDate <= endTime) {
       return `Осталось ${endDiff >= 60 ? `1 час ${formatMinutes(endDiff - 60)}` : formatMinutes(endDiff)}`
     }
   }

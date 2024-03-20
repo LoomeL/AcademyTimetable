@@ -47,7 +47,7 @@ const options = {
             <h5 class="mb-0">
               {{ element.name }}
             </h5>
-            <i class="fa-solid fa-pencil fs-5 text-body-tertiary" @click="profilesStore.editorSelectedProfile = element"></i>
+            <i class="fa-solid fa-pencil fs-5 text-body-tertiary" @click="profilesStore.editorSelectedProfile = JSON.parse(JSON.stringify(element))"></i>
           </div>
           <hr class="my-2 mb-1" />
           <small class="text-body-tertiary">Основная группа</small> <br />

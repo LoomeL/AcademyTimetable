@@ -1,5 +1,8 @@
 import {computed, ref, watch} from 'vue'
 import { defineStore } from 'pinia'
+import {computedAsync} from "@vueuse/core";
+import {fetchAutoComplete, fetchInstitutes} from "@/utils/requests.js";
+import {useNavigationStore} from "@/stores/navigation.js";
 
 const institutesShortName = [
     ["Институт архитектуры и дизайна", "ИАиД"],
@@ -55,30 +58,30 @@ const reduceInstitutes = (inst) => {
 
 export const useSearchStore = defineStore('search', () => {
     const searchValue = ref('')
-    const institutes = ref([])
-    const rawInstitutes = ref([])
-    const autoCompleteData = ref([])
     const selectedGroup = ref('')
 
+    const autoCompleteData = computedAsync(async () => {
+        if (searchValue.value === "") return []
+        const data = await fetchAutoComplete(searchValue.value)
+        return Object.keys(data).splice(0, 6)
+    })
+
+    const institutes = computedAsync(async () => {
+        const data = await fetchInstitutes()
+        return data ? reduceInstitutes(data) : {}
+    })
+
     const loading = computed(() => {
-        return rawInstitutes.value.length === 0
+        return Object.keys(institutes).length === 0
     })
 
-    watch(searchValue, async (nv) => {
-        const response = await fetch(`https://edu.sfu-kras.ru/api/timetable/autocomplete_new/${nv}`)
-        if (response.ok) {
-            const data = await response.json()
-            autoCompleteData.value = Object.keys(data).slice(0, 6)
-        } else {
-            autoCompleteData.value = []
-        }
+    const nav = useNavigationStore()
 
-/*        institutes.value = reduceInstitutes(rawInstitutes.value.filter((i) => {
-            const name = i.name.toLocaleLowerCase()
-            return name.startsWith(nv.toLocaleLowerCase())
-        }))*/
+    watch(selectedGroup, () => {
+        nav.currentPage = 'SearchPage'
+        window.scrollTo(0, 0)
     })
-
+/*
     const fetchInstitutes = () =>  {
         setTimeout(async () => {
             const institutesResponse = await fetch("https://edu.sfu-kras.ru/api/timetable/get_insts")
@@ -90,7 +93,7 @@ export const useSearchStore = defineStore('search', () => {
                 rawInstitutes.value = []
             }
         }, 500)
-    }
+    }*/
 
-    return { searchValue, institutes, autoCompleteData, loading, fetchInstitutes, selectedGroup }
+    return { searchValue, institutes, autoCompleteData, loading, selectedGroup }
 })
