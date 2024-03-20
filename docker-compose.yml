@@ -12,7 +12,7 @@ services:
       - LETSENCRYPT_HOST=academy.loomel.tech
       - VIRTUAL_PORT=8080
     networks:
-      - hastebin
+      - proxy
 networks:
   proxy:
     external: true
