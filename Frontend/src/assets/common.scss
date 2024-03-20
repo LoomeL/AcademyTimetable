@@ -47,14 +47,24 @@
 .grid-item__placeholder {
   width: 50%;
 }
-.grid-item__container--oneChild {
-  .grid-item__schedule {
-    width: 100%;
-  }
-}
+
 .grid-item__schedule {
   width: 50%;
 }
 .grid-item--active {
   background-color: rgba(var(--bs-primary-rgb), 0.2);
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+* {
+  transition: background-color 0.2s ease;
 }

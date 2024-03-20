@@ -1,13 +1,19 @@
 <template>
-  <div class="card" v-for="i in 5">
+  <div class="card">
     <div class="card-header d-flex justify-content-between">
-      <span>Вторник</span> <span class="text-body-secondary">11 февраля</span>
+      <span>{{dayOfWeek}}</span> <span class="text-body-secondary">{{dateString}}</span>
     </div>
     <div class="card-body p-0 schedule-list-border">
-      <ScheduleItem v-for="i in 3" />
+      <ScheduleItem :sfu-t-t="item" v-for="(item, i) in data"/>
     </div>
   </div>
 </template>
 <script setup>
 import ScheduleItem from '@/components/Schedule/ScheduleItem.vue'
+
+defineProps({
+  data: Array,
+  dayOfWeek: String,
+  dateString: String
+})
 </script>

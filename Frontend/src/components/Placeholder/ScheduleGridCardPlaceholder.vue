@@ -4,7 +4,7 @@ import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceh
 </script>
 
 <template>
-  <div class="card">
+  <div class="card" v-for="(item, i) in 5">
     <div class="card-header">
       <div class="placeholder placeholder-wave rounded-2 col-5 my-1"></div>
     </div>
@@ -19,15 +19,15 @@ import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceh
         </div>
       </div>
       <div class="grid-item__container">
-        <ScheduleItemPlaceholder class="grid-item__schedule" compact />
+        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active" compact />
         <div class="grid-item__placeholder"></div>
       </div>
       <div class="grid-item__container">
-        <div class="grid-item__placeholder grid-item--active"></div>
+      <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active" compact />
         <ScheduleItemPlaceholder class="grid-item__schedule" compact />
       </div>
-      <div class="grid-item__container grid-item__container--oneChild">
-        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active" />
+      <div class="grid-item__container">
+        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active w-100" />
       </div>
     </div>
   </div>

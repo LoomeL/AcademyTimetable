@@ -58,6 +58,18 @@ function appendResult(group, task, time) {
         room: data == null ? "" : data[2].trim(),
         group: group,
     })
+
+    /*{
+      subject: "Мобильные приложения",
+      timeFrom: "",
+      timeTo: "",
+      type: "",
+      sync: "",
+      building: "",
+      room: "",
+      place: "",
+      links: []
+    }*/
 }
 
 function parseDate(dateString) {

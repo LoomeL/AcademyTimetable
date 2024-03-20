@@ -1,111 +1,37 @@
-<script setup>
-import ScheduleItem from '@/components/Schedule/ScheduleItem.vue'
-import ScheduleGridCard from '@/components/Schedule/ScheduleGridCard.vue'
-import ScheduleListCard from '@/components/Schedule/ScheduleListCard.vue'
-import AcademyLogo from '@/components/Logos/AcademyLogo.vue'
-import SfuLogo from '@/components/Logos/SfuLogo.vue'
-import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceholder.vue'
-import ScheduleListCardPlaceholder from '@/components/Placeholder/ScheduleListCardPlaceholder.vue'
-import ScheduleGridCardPlaceholder from '@/components/Placeholder/ScheduleGridCardPlaceholder.vue'
-</script>
 
 <template>
-  <div class="d-flex justify-content-between text-body-tertiary">
-    <div class="d-flex gap-2 align-items-center fs-5">
-      <i class="fa-solid fa-chevron-left"></i>Назад
-    </div>
-    <div class="d-flex gap-2 align-items-center fs-5">
-      <i class="fa-regular fa-bookmark"></i>Сохранить
-    </div>
-  </div>
 
-  <div class="card" v-if="true">
-    <div class="card-body">
-      <h5 class="mb-0">КИ21-21Б (1 подгруппа)</h5>
-      Совмещено с АИТ22-05
-      <hr class="my-2" />
-      ИКИТ - институт космических и информационных технологий
-      <br />
-      <small class="text-body-tertiary">Идет четная неделя</small>
+  <div class="d-flex flex-column align-items-center" v-if="profilesStore.profiles.length === 0">
+    <h4 class="mt-3">
+      Как-то здесь пустовато <span style="font-family: 'Noto Color Emoji', sans-serif">😕</span>
+    </h4>
+    <p class="text-body-tertiary px-3 text-center">
+      У тебя нет сохраненного расписания, выбери институт ниже или начни вводить номер группы в поле
+      поиска
+    </p>
+    <div class="d-flex justify-content-center">
+      <button class="btn btn-outline-primary" @click="nav.currentPage = 'SearchPage'">Найти расписание <i class="fa-solid fa-arrow-right"></i></button>
     </div>
   </div>
 
-  <div class="card" v-else>
-    <div class="card-body d-flex flex-column gap-2">
-      <div class="placeholder placeholder-wave col-5 rounded-2"></div>
-      <div class="placeholder placeholder-sm placeholder-wave col-4 rounded-2"></div>
-      <hr class="my-1" />
-      <div class="placeholder placeholder-wave col-9 rounded-2"></div>
-      <div class="placeholder placeholder-wave col-7 rounded-2"></div>
-      <div class="placeholder placeholder-sm placeholder-wave col-4 rounded-2"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-body">
-      <h5 class="mb-0">Иванов И.И.</h5>
-      <hr class="my-2" />
-      Преподователь
-      <br />
-      <small class="text-body-tertiary">Идет четная неделя</small>
-    </div>
-  </div>
-
-  <div class="d-flex gap-3">
-    <div class="btn btn-outline-secondary w-50 active">
-      <h5 class="m-0">Сегодня</h5>
-      <span class="text-body-secondary">пн, 1 января</span>
-    </div>
-    <div class="btn btn-outline-secondary w-50 text-body-secondary">
-      <h5 class="m-0">Завтра</h5>
-      <span class="text-body-secondary">вт, 2 января</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-body p-0 schedule-list-border">
-      <ScheduleItem v-for="i in 3" />
-      <ScheduleItemPlaceholder v-for="i in 3" />
-    </div>
-  </div>
-
-  <div class="d-flex gap-3">
-    <div class="btn-group">
-      <button class="btn btn-outline-primary">
-        <i class="fa-solid fa-list"></i>
-      </button>
-      <button class="btn btn-outline-primary">
-        <i class="fa-solid fa-grip"></i>
-      </button>
-    </div>
-    <div class="d-flex gap-3 overflow-x-auto">
-      <button class="btn btn-outline-primary flex-shrink-0" v-for="i in 2">
-        КИ21-21Б (1 подгруппа)
-      </button>
-    </div>
-  </div>
-
-  <div class="d-flex gap-3" v-if="false">
-    <button class="btn btn-outline-primary"><i class="fa-solid fa-house"></i></button>
-    <div class="d-flex flex-grow-1 justify-content-between align-items-center">
-      <button class="btn btn-outline-primary"><i class="fa-solid fa-arrow-left"></i></button>
-      <span>6 неделя / 05.02 - 11.02</span>
-      <button class="btn btn-outline-primary"><i class="fa-solid fa-arrow-right"></i></button>
-    </div>
-  </div>
-
-  <div class="d-flex gap-3 bg-body">
-    <button class="btn btn-outline-secondary w-50 active">Нечетная неделя</button>
-    <button class="btn btn-outline-secondary text-body-secondary w-50">Четная неделя</button>
-  </div>
-
-  <!--  <ScheduleAlert/>-->
-
-  <ScheduleListCardPlaceholder />
-
-  <ScheduleListCard />
-
-  <ScheduleGridCardPlaceholder v-for="i in 5" />
-
-  <ScheduleGridCard v-for="i in 5" />
+  <Schedule :raw-sfu-t-t="sfu" :loading="!sfu" show-favorites v-else/>
 </template>
+<script setup>
+
+import {useNavigationStore} from "@/stores/navigation.js";
+import {useProfilesStore} from "@/stores/profiles.js";
+import Schedule from "@/components/Schedule.vue";
+import {computedAsync} from "@vueuse/core";
+import {fetchSfuTT} from "@/utils/requests.js";
+
+const nav = useNavigationStore()
+const profilesStore = useProfilesStore()
+
+const sfu = computedAsync( async () => {
+  return profilesStore.selectedProfile.sfu ? await fetchSfuTT(profilesStore.selectedProfile.sfu) : undefined
+})
+//
+// const ait = computedAsync( async () => {
+//   return profilesStore.selectedProfile.ait ? await fetchSfuTT(profilesStore.selectedProfile.ait) : {}
+// })
+</script>
