@@ -113,6 +113,8 @@ const timeMessage = computed(() => {
   if (Math.abs(endDiff) <= 3) {
     return 'Только что закончилась'
   }
+
+  return ''
 })
 
 const props = defineProps({

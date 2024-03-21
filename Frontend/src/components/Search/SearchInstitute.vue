@@ -24,7 +24,7 @@ import { ref } from 'vue'
 
 const showCourses = ref(false)
 
-const props = defineProps({
+defineProps({
   name: String,
   shortName: String,
   show: Boolean

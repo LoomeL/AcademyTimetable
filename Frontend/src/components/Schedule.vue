@@ -4,7 +4,7 @@
 
     <div class="d-flex gap-3">
       <div
-        v-for="(item, i) in 2"
+        v-for="_ in 2"
         class="card w-50 d-flex justify-content-center align-items-center flex-column gap-2 p-2"
       >
         <div class="placeholder placeholder-wave col-5 rounded-2"></div>
@@ -14,7 +14,7 @@
 
     <div class="card">
       <div class="card-body p-0 schedule-list-border">
-        <ScheduleItemPlaceholder v-for="(item, i) in 3" />
+        <ScheduleItemPlaceholder v-for="_ in 3" />
       </div>
     </div>
 
@@ -228,7 +228,7 @@ import { useProfilesStore } from '@/stores/profiles.js'
 import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceholder.vue'
 import ScheduleListCardPlaceholder from '@/components/Placeholder/ScheduleListCardPlaceholder.vue'
 import ScheduleGridCardPlaceholder from '@/components/Placeholder/ScheduleGridCardPlaceholder.vue'
-import { times, useScheduleStore } from '@/stores/schedule.js'
+import { times } from '@/stores/schedule.js'
 import { ru } from 'date-fns/locale/ru'
 
 const settingsStore = useSettingsStore()

@@ -3,7 +3,7 @@ import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceh
 </script>
 
 <template>
-  <div v-for="(item, i) in 5" class="card">
+  <div v-for="_ in 5" class="card">
     <div class="card-header">
       <div class="placeholder placeholder-wave rounded-2 col-5 my-1"></div>
     </div>

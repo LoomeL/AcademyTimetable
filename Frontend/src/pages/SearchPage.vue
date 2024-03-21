@@ -2,7 +2,9 @@
   <template v-if="searchStore.selectedGroup === ''">
     <SearchField />
 
-    <InstitutePlaceholder v-for="(item, i) in 12" v-if="searchStore.loading" />
+    <template v-if="searchStore.loading">
+      <InstitutePlaceholder v-for="_ in 12" />
+    </template>
 
     <SearchInstitute
       v-for="(departments, name) in searchStore.institutes"
