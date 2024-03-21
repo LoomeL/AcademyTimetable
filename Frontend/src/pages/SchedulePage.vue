@@ -14,24 +14,26 @@
     </div>
   </div>
 
-  <Schedule v-else :loading="!sfu" :raw-sfu-t-t="sfu" show-favorites/>
+  <Schedule v-else :loading="!sfu || (profilesStore.selectedProfile.ait !== '' && !ait)" :raw-ait-t-t="ait" :raw-sfu-t-t="sfu" show-favorites/>
 </template>
 <script setup>
-
 import {useNavigationStore} from "@/stores/navigation.js";
 import {useProfilesStore} from "@/stores/profiles.js";
 import Schedule from "@/components/Schedule.vue";
 import {computedAsync} from "@vueuse/core";
 import {fetchSfuTT} from "@/utils/requests.js";
+import { useScheduleStore } from '@/stores/schedule.js'
 
 const nav = useNavigationStore()
 const profilesStore = useProfilesStore()
+const scheduleStore = useScheduleStore()
 
 const sfu = computedAsync(async () => {
   return profilesStore.selectedProfile.sfu ? await fetchSfuTT(profilesStore.selectedProfile.sfu) : undefined
 })
-//
-// const ait = computedAsync( async () => {
-//   return profilesStore.selectedProfile.ait ? await fetchSfuTT(profilesStore.selectedProfile.ait) : {}
-// })
+
+const ait = computedAsync(async () => {
+  if (!scheduleStore.aitTT) return undefined
+  return profilesStore.selectedProfile.ait ? scheduleStore.aitTT[profilesStore.selectedProfile.ait] : undefined
+})
 </script>

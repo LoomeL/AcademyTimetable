@@ -2,7 +2,7 @@
   <div v-if="true" class="card">
     <div class="card-body">
       <h5 class="mb-0">{{ target }}</h5>
-      {{ ait }}
+      {{ ait === "" ? ait : "Совмещено с " + ait }}
       <hr class="my-2"/>
       <span
           v-if="!teacher">{{ instituteShortName !== undefined ? instituteShortName + ' - ' + instituteName : instituteName }}</span>

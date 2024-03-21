@@ -5,7 +5,7 @@
       <div class="d-flex flex-wrap column-gap-2 align-items-center">
         <span><span class="fw-normal">{{ time[0] }}</span>-{{ time[1] }}</span>
         <div v-if="current.type" class="dot-separator"/>
-        <span>{{ current.type }}</span>
+        <span v-if="current.type">{{ current.type }}</span>
         <div v-if="current.sync" class="dot-separator"/>
         {{ current.sync }}
       </div>
@@ -13,7 +13,7 @@
       <span v-if="current.place">{{ current.place }}</span>
       <a v-if="current.teacher" class="text-decoration-none text-body"
          @click="searchStore.selectedGroup = current.teacher">{{ current.teacher }}</a>
-      <a v-for="i in current.groups" v-if="current.groups" class="text-decoration-none text-body"
+      <a v-for="i in current.groups" :key="i" class="text-decoration-none text-body"
          @click="searchStore.selectedGroup = i">{{ i }}</a>
       <span v-if="showTime && timeMessage" class="text-primary-emphasis">{{ timeMessage }}</span>
     </div>
@@ -44,8 +44,8 @@ const searchStore = useSearchStore()
 const showOverlay = ref(false)
 
 const current = computed(() => {
-  if (props.sfuTT !== undefined && props.aitTT !== undefined) {
-    return showOverlay ? props.aitTT : props.sfuTT
+  if (props.sfuTT && props.aitTT) {
+    return showOverlay.value ? props.aitTT : props.sfuTT
   } else {
     return props.aitTT || props.sfuTT
   }
@@ -75,12 +75,12 @@ const timeMessage = computed(() => {
     }
   }
 
-  const startDiff = differenceInMinutes(scheduleStore.liveDate, startTime)
+  const startDiff = differenceInMinutes(scheduleStore.liveDate, startTime) + 1
   const endDiff = differenceInMinutes(endTime, scheduleStore.liveDate) + 1
 
   if (scheduleStore.liveDate < startTime) {
     if (Math.abs(startDiff) > 10) return
-    return `Начнется через ${formatMinutes(startDiff)}`
+    return `Начнется через ${formatMinutes(Math.abs(startDiff))}`
   }
 
   if (startTime <= scheduleStore.liveDate && scheduleStore.liveDate <= endTime) {

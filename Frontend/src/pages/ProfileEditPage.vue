@@ -85,10 +85,10 @@ const selectSfuGroup = (g) => {
 
 const aitShowAutoComplete = ref(false)
 
-const aitAutoCompleteData = computedAsync(async () => {
+const aitAutoCompleteData = computed(() => {
   if (profile.ait === "") return []
   return scheduleStore.aitGroups.filter((item) => item.toLowerCase().startsWith(profile.ait.toLowerCase())).sort()
-}, [profile.ait])
+})
 
 const isValidAitGroup = computed(() => {
   if (profile.ait === '')

@@ -4,15 +4,21 @@
       <span>{{ dayOfWeek }}</span> <span class="text-body-secondary">{{ dateString }}</span>
     </div>
     <div class="card-body p-0 schedule-list-border">
-      <ScheduleItem v-for="(item, i) in data" :sfu-t-t="item"/>
+      <template v-for="time in times">
+        <ScheduleItem v-if="(sfuData && sfuData[time]) || (aitData && aitData[time])"
+                      :sfu-t-t="sfuData ? sfuData[time] : undefined"
+                      :ait-t-t="aitData ? aitData[time] : undefined" />
+      </template>
     </div>
   </div>
 </template>
 <script setup>
 import ScheduleItem from '@/components/Schedule/ScheduleItem.vue'
+import { times } from '@/stores/schedule.js'
 
 defineProps({
-  data: Array,
+  sfuData: Object,
+  aitData: Object,
   dayOfWeek: String,
   dateString: String
 })

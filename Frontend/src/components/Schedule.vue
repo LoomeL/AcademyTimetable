@@ -50,7 +50,8 @@
     <ScheduleHeader :institute-name="rawSfuTT.institute"
                     :institute-short-name="institutesShortNameObj[rawSfuTT.institute]"
                     :target="rawSfuTT.target"
-                    :teacher="rawSfuTT.type === 'teacher'"/>
+                    :teacher="rawSfuTT.type === 'teacher'"
+                    :ait="profilesStore.selectedProfile.ait"/>
 
     <div class="d-flex gap-3">
       <div :class="{'active': !showNextDay, 'text-body-secondary': showNextDay}" class="btn btn-outline-secondary w-50"
@@ -67,7 +68,12 @@
 
     <div class="card">
       <div class="card-body p-0 schedule-list-border">
-        <ScheduleItem v-for="schedule in currentSchedule" :sfu-t-t="schedule" show-time/>
+        <template v-for="time in times">
+          <ScheduleItem v-if="currentSchedule[time] || (currentAitSchedule && currentAitSchedule[time])"
+                        :sfu-t-t="currentSchedule[time]"
+                        :ait-t-t="currentAitSchedule ? currentAitSchedule[time] : undefined"
+                        :show-time="!showNextDay"/>
+        </template>
       </div>
     </div>
 
@@ -82,9 +88,8 @@
           <i class="fa-solid fa-grip"></i>
         </button>
       </div>
-      <div v-if="showFavorites" class="d-flex gap-3 overflow-x-auto">
+      <div v-if="showFavorites && profilesStore.profiles.length !== 0" class="d-flex gap-3 overflow-x-auto">
         <button v-for="i in profilesStore.profiles"
-                v-if="profilesStore.profiles.length !== 0"
                 :class="{'active': profilesStore.selectedProfile === i}"
                 class="btn btn-outline-primary flex-shrink-0" @click="profilesStore.selectedProfile = i">
           {{ i.name }}
@@ -94,11 +99,15 @@
 
     <template v-if="!settingsStore.settings.gridView">
       <div v-if="rawAitTT !== undefined" class="d-flex gap-3">
-        <button class="btn btn-outline-primary"><i class="fa-solid fa-house"></i></button>
+        <button class="btn btn-outline-primary" @click="selectedWeek = currentWeek"><i class="fa-solid fa-house"></i></button>
         <div class="d-flex flex-grow-1 justify-content-between align-items-center">
-          <button class="btn btn-outline-primary"><i class="fa-solid fa-arrow-left"></i></button>
-          <span>6 неделя / 05.02 - 11.02</span>
-          <button class="btn btn-outline-primary"><i class="fa-solid fa-arrow-right"></i></button>
+          <button class="btn btn-outline-primary"
+                  @click="selectedWeek--"
+                  :disabled="selectedWeek === 1"><i class="fa-solid fa-arrow-left"></i></button>
+          <span>{{ selectedWeek }} неделя / {{format(firstDayOfSelectedWeek, "dd.MM")}} - {{format(addDays(firstDayOfSelectedWeek, 5), "dd.MM")}}</span>
+          <button class="btn btn-outline-primary"
+            @click="selectedWeek++"
+                  :disabled="selectedWeek === 52"><i class="fa-solid fa-arrow-right"></i></button>
         </div>
       </div>
 
@@ -113,8 +122,13 @@
         </button>
       </div>
 
-      <ScheduleListCard v-for="(day, key) in weeklyScheduleList" :data="day" :day-of-week="days[key - 1]"
-                        date-string=""/>
+      <template v-for="(day, key) in 7">
+        <ScheduleListCard v-if="weeklyScheduleList[key.toString()] || (rawAitTT && rawAitTT[format(addDays(firstDayOfSelectedWeek, key - 1), 'yyyy.M.d')])"
+                          :sfuData="weeklyScheduleList[key.toString()]"
+                          :ait-data="rawAitTT ? rawAitTT[format(addDays(firstDayOfSelectedWeek, key - 1), 'yyyy.M.d')] : undefined"
+                          :day-of-week="days[key - 1]"
+                          :date-string="rawAitTT ? format(addDays(firstDayOfSelectedWeek, key - 1), 'dd MMMM', {locale: ru}) : ''"/>
+      </template>
     </template>
 
     <ScheduleGridCard v-for="(day, key) in weeklyScheduleGrid" v-else :data="day"
@@ -132,26 +146,40 @@ import {useSettingsStore} from "@/stores/settings.js";
 import ScheduleListCard from "@/components/Schedule/ScheduleListCard.vue";
 import ScheduleGridCard from "@/components/Schedule/ScheduleGridCard.vue";
 import {currentWeek, isEvenWeek, toDateString, today} from "../utils/date.js";
-import {addDays} from "date-fns";
+import { addDays, addWeeks, format } from 'date-fns'
 import {useProfilesStore} from "@/stores/profiles.js";
 import ScheduleItemPlaceholder from "@/components/Placeholder/ScheduleItemPlaceholder.vue";
 import ScheduleListCardPlaceholder from "@/components/Placeholder/ScheduleListCardPlaceholder.vue";
 import ScheduleGridCardPlaceholder from "@/components/Placeholder/ScheduleGridCardPlaceholder.vue";
-import {useNavigationStore} from "@/stores/navigation.js";
+import { times, useScheduleStore } from '@/stores/schedule.js'
+import { ru } from 'date-fns/locale/ru'
 
 const settingsStore = useSettingsStore()
 const profilesStore = useProfilesStore()
-const nav = useNavigationStore()
 
 const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
 
 const showNextDay = ref(false)
 const showAnotherWeek = ref(false)
+const selectedWeek = ref(currentWeek)
+
+const firstDayOfSelectedWeek = computed(() => {
+  return addWeeks(new Date(today.getFullYear(), 0, 1), selectedWeek.value - 1)
+})
 
 const currentSchedule = computed(() => {
   if (props.loading) return null;
   return props.rawSfuTT.timetable.filter(item => parseInt(item.week) === (currentWeek % 2 ? 1 : 2) &&
       parseInt(item.day) === addDays(today, showNextDay.value ? 1 : 0).getDay())
+    .reduce((accumulator, item) => {
+      accumulator[item.time] = item
+      return accumulator
+    }, {})
+})
+
+const currentAitSchedule = computed(() => {
+  if (!props.rawAitTT) return {}
+  return props.rawAitTT[format(showNextDay.value ? addDays(today, 1) : today, 'yyyy.M.d')]
 })
 
 const weeklyScheduleGrid = computed(() => {
@@ -173,13 +201,17 @@ const weeklyScheduleGrid = computed(() => {
 const weeklyScheduleList = computed(() => {
   if (props.loading) return null;
   return props.rawSfuTT.timetable.reduce((accumulator, item) => {
-    if (item.week === ((showAnotherWeek.value ? !isEvenWeek : isEvenWeek) ? "1" : "2")) return accumulator;
-
-    if (!accumulator[item.day]) {
-      accumulator[item.day] = []
+    if (!props.rawAitTT) {
+      if (item.week === ((showAnotherWeek.value ? !isEvenWeek : isEvenWeek) ? "1" : "2")) return accumulator;
+    } else {
+      if (item.week === (!(selectedWeek.value % 2) ? "1" : "2")) return accumulator;
     }
 
-    accumulator[item.day].push(item)
+    if (!accumulator[item.day]) {
+      accumulator[item.day] = {}
+    }
+
+    accumulator[item.day][item.time] = item
     return accumulator
   }, {});
 })
