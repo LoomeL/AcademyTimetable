@@ -20,7 +20,6 @@ services:
       dockerfile: Dockerfile
     environment:
       - VIRTUAL_HOST=academy.loomel.tech
-      - LETSENCRYPT_HOST=academy.loomel.tech
     networks:
       - proxy
 networks:
