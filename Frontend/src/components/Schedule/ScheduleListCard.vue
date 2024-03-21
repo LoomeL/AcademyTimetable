@@ -5,9 +5,11 @@
     </div>
     <div class="card-body p-0 schedule-list-border">
       <template v-for="time in times">
-        <ScheduleItem v-if="(sfuData && sfuData[time]) || (aitData && aitData[time])"
-                      :sfu-t-t="sfuData ? sfuData[time] : undefined"
-                      :ait-t-t="aitData ? aitData[time] : undefined" />
+        <ScheduleItem
+          v-if="(sfuData && sfuData[time]) || (aitData && aitData[time])"
+          :sfu-t-t="sfuData ? sfuData[time] : undefined"
+          :ait-t-t="aitData ? aitData[time] : undefined"
+        />
       </template>
     </div>
   </div>

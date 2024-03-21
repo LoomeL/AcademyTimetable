@@ -18,15 +18,15 @@ import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceh
         </div>
       </div>
       <div class="grid-item__container">
-        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active" compact/>
+        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active" compact />
         <div class="grid-item__placeholder"></div>
       </div>
       <div class="grid-item__container">
-        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active" compact/>
-        <ScheduleItemPlaceholder class="grid-item__schedule" compact/>
+        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active" compact />
+        <ScheduleItemPlaceholder class="grid-item__schedule" compact />
       </div>
       <div class="grid-item__container">
-        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active w-100"/>
+        <ScheduleItemPlaceholder class="grid-item__schedule grid-item--active w-100" />
       </div>
     </div>
   </div>

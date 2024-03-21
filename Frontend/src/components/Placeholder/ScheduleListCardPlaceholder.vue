@@ -8,7 +8,7 @@ import ScheduleItemPlaceholder from '@/components/Placeholder/ScheduleItemPlaceh
       <div class="placeholder placeholder-wave rounded-2 col-5 my-1"></div>
     </div>
     <div class="card-body p-0 schedule-list-border">
-      <ScheduleItemPlaceholder v-for="(item, i) in 3"/>
+      <ScheduleItemPlaceholder v-for="(item, i) in 3" />
     </div>
   </div>
 </template>
