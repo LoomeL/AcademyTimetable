@@ -10,7 +10,7 @@
           Четная неделя
         </div>
       </div>
-      <div v-for="_ in data" class="grid-item__container">
+      <div v-for="item in data" class="grid-item__container">
         <template v-if="item.length === 1">
           <div
             v-if="item[0].week === '2'"
