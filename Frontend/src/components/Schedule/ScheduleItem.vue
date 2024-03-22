@@ -8,7 +8,7 @@
           >-{{ time[1] }}</span
         >
         <div v-if="current.type" class="dot-separator" />
-        <span v-if="current.type">{{ current.type }}</span>
+        <span v-if="current.type" :style="`color: ${colorOfType}`">{{ current.type }}</span>
         <div v-if="current.sync" class="dot-separator" />
         {{ current.sync }}
       </div>
@@ -115,6 +115,18 @@ const timeMessage = computed(() => {
   }
 
   return ''
+})
+
+const colorOfType = computed(() => {
+  const colors = {
+    "лекция" : "#ff6000",
+    "практика" : "#00f",
+    "семинары" : "#22a744",
+    "лекция и практика" : "#f53f93",
+    "пр. занятие" : "rgb(34 185 87)",
+  }
+  return /лаб/.test(current.value.type) ? "#d01eb2" :
+    colors[current.value.type] ? colors[current.value.type] : ""
 })
 
 const props = defineProps({
