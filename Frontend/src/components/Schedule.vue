@@ -97,6 +97,10 @@
             :show-time="!showNextDay"
           />
         </template>
+        <div class="d-flex justify-content-center align-items-center flex-column py-3" v-if="(currentSchedule && Object.keys(currentSchedule).length === 0) && (currentAitSchedule && Object.keys(currentAitSchedule).length === 0)">
+          <h5>Занятий нет</h5>
+          <p class="m-0">{{showNextDay? "Завтра" : "Сегодня"}} можно отдыхать</p>
+        </div>
       </div>
     </div>
 
@@ -123,7 +127,7 @@
       >
         <button
           v-for="i in profilesStore.profiles"
-          :class="{ active: profilesStore.selectedProfile === i }"
+          :class="{ active: profilesStore.selectedProfile.id === i.id }"
           class="btn btn-outline-primary flex-shrink-0"
           @click="profilesStore.selectedProfile = i"
         >

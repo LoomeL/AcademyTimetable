@@ -83,6 +83,8 @@ const options = {
     <a
       class="text-body-tertiary fs-5 text-decoration-none"
       href="https://github.com/LoomeL/AcademyTimetable"
+      target="_blank"
+      @click="$yandexMetrika.hit('https://github.com/LoomeL/AcademyTimetable')"
     >
       <i class="fa-brands fa-github"></i> GitHub</a
     >

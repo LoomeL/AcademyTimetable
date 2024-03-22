@@ -1,5 +1,5 @@
 <template>
-  <div class="position-relative fw-light" @click="showOverlay = !showOverlay">
+  <div class="position-relative fw-light" @click="showOverlay = !showOverlay" :class="{'grid-item--active': showTime && isCurrent}">
     <div class="d-flex flex-column gap-1 p-3 z-1">
       <span v-if="current.subject" class="fw-normal">{{ current.subject }}</span>
       <div class="d-flex flex-wrap column-gap-2 align-items-center">
@@ -70,10 +70,12 @@ const time = computed(() => {
 
 const scheduleStore = useScheduleStore()
 
-const timeMessage = computed(() => {
-  const startTime = parse(time.value[0], 'HH:mm', scheduleStore.liveDate)
-  const endTime = parse(time.value[1], 'HH:mm', scheduleStore.liveDate)
+const startTime = computed(() => parse(time.value[0], 'HH:mm', scheduleStore.liveDate))
+const endTime = computed(() => parse(time.value[1], 'HH:mm', scheduleStore.liveDate))
 
+const isCurrent = computed(() => startTime.value <= scheduleStore.liveDate && scheduleStore.liveDate <= endTime.value)
+
+const timeMessage = computed(() => {
   function formatMinutes(num) {
     if (num >= 11 && num <= 14) {
       return `${num} минут`
@@ -88,15 +90,15 @@ const timeMessage = computed(() => {
     }
   }
 
-  const startDiff = differenceInMinutes(scheduleStore.liveDate, startTime) + 1
-  const endDiff = differenceInMinutes(endTime, scheduleStore.liveDate) + 1
+  const startDiff = differenceInMinutes(scheduleStore.liveDate, startTime.value) + 1
+  const endDiff = differenceInMinutes(endTime.value, scheduleStore.liveDate) + 1
 
-  if (scheduleStore.liveDate < startTime) {
+  if (scheduleStore.liveDate < startTime.value) {
     if (Math.abs(startDiff) > 10) return
     return `Начнется через ${formatMinutes(Math.abs(startDiff))}`
   }
 
-  if (startTime <= scheduleStore.liveDate && scheduleStore.liveDate <= endTime) {
+  if (isCurrent.value) {
     if (startDiff < 5) {
       return `Только что началась`
     }
@@ -105,7 +107,7 @@ const timeMessage = computed(() => {
       return `Началась ${formatMinutes(startDiff)} назад`
     }
 
-    if (scheduleStore.liveDate <= endTime) {
+    if (scheduleStore.liveDate <= endTime.value) {
       return `Осталось ${endDiff >= 60 ? `1 час ${formatMinutes(endDiff - 60)}` : formatMinutes(endDiff)}`
     }
   }
