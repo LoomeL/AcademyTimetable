@@ -90,16 +90,16 @@ const timeMessage = computed(() => {
     }
   }
 
-  const startDiff = differenceInMinutes(scheduleStore.liveDate, startTime.value) + 1
-  const endDiff = differenceInMinutes(endTime.value, scheduleStore.liveDate) + 1
+  const startDiff = differenceInMinutes(scheduleStore.liveDate, startTime.value)
+  const endDiff = differenceInMinutes(endTime.value, scheduleStore.liveDate)
 
   if (scheduleStore.liveDate < startTime.value) {
-    if (Math.abs(startDiff) > 10) return
-    return `Начнется через ${formatMinutes(Math.abs(startDiff))}`
+    if (Math.abs(startDiff) > 6) return ''
+    return `Начнется через ${Math.abs(startDiff) !== 1 ? formatMinutes(Math.abs(startDiff - 1)) : "1 минуту"}`
   }
 
   if (isCurrent.value) {
-    if (startDiff < 5) {
+    if (startDiff <= 5) {
       return `Только что началась`
     }
 
@@ -108,7 +108,11 @@ const timeMessage = computed(() => {
     }
 
     if (scheduleStore.liveDate <= endTime.value) {
-      return `Осталось ${endDiff >= 60 ? `1 час ${formatMinutes(endDiff - 60)}` : formatMinutes(endDiff)}`
+      if (endDiff + 1 < 60) {
+        return `Осталось ${formatMinutes(endDiff + 1)}`
+      } else {
+        return `Остался 1 час ${endDiff - 59 === 0 ? "" : formatMinutes(endDiff - 59)}`
+      }
     }
   }
 
