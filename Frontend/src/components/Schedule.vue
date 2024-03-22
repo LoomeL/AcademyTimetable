@@ -162,21 +162,21 @@
       <div v-else class="d-flex gap-3 bg-body">
         <button
           :class="{
-            active: showAnotherWeek ? isEvenWeek : !isEvenWeek,
-            'text-body-secondary': !showAnotherWeek ? isEvenWeek : !isEvenWeek
+            active: !showEvenWeek,
+            'text-body-secondary': showEvenWeek
           }"
           class="btn btn-outline-secondary w-50"
-          @click="showAnotherWeek = !showAnotherWeek"
+          @click="showEvenWeek = false"
         >
           Нечетная неделя
         </button>
         <button
           :class="{
-            active: !showAnotherWeek ? isEvenWeek : !isEvenWeek,
-            'text-body-secondary': showAnotherWeek ? isEvenWeek : !isEvenWeek
+            active: showEvenWeek,
+            'text-body-secondary': !showEvenWeek
           }"
           class="btn btn-outline-secondary w-50"
-          @click="showAnotherWeek = !showAnotherWeek"
+          @click="showEvenWeek = true"
         >
           Четная неделя
         </button>
@@ -237,7 +237,8 @@ const profilesStore = useProfilesStore()
 const days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
 
 const showNextDay = ref(false)
-const showAnotherWeek = ref(false)
+const showEvenWeek = ref(isEvenWeek)
+
 const selectedWeek = ref(currentWeek)
 
 const firstDayOfSelectedWeek = computed(() => {
@@ -283,7 +284,7 @@ const weeklyScheduleList = computed(() => {
   if (props.loading) return null
   return props.rawSfuTT.timetable.reduce((accumulator, item) => {
     if (!props.rawAitTT) {
-      if (item.week === ((showAnotherWeek.value ? !isEvenWeek : isEvenWeek) ? '1' : '2'))
+      if (item.week === (showEvenWeek.value ? '1' : '2'))
         return accumulator
     } else {
       if (item.week === (!(selectedWeek.value % 2) ? '1' : '2')) return accumulator
