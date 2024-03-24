@@ -63,7 +63,7 @@
       :institute-short-name="institutesShortNameObj[rawSfuTT.institute]"
       :target="rawSfuTT.target"
       :teacher="rawSfuTT.type === 'teacher'"
-      :ait="profilesStore.selectedProfile.ait"
+      :ait="showFavorites ? profilesStore.selectedProfile.ait : undefined"
     />
 
     <div class="d-flex gap-3">
@@ -214,13 +214,15 @@
       </template>
     </template>
 
-    <ScheduleGridCard
-      v-for="(day, key) in weeklyScheduleGrid"
-      v-else
-      :data="day"
-      :day-of-week="days[key - 1]"
-      :highlight-even="isEvenWeek"
-    />
+    <template v-else>
+      <ScheduleAlert v-if="rawAitTT && !settingsStore.settings.hideGridAlert"/>
+      <ScheduleGridCard
+        v-for="(day, key) in weeklyScheduleGrid"
+        :data="day"
+        :day-of-week="days[key - 1]"
+        :highlight-even="isEvenWeek"
+      />
+    </template>
   </template>
 </template>
 <script setup>
@@ -240,6 +242,7 @@ import ScheduleListCardPlaceholder from '@/components/Placeholder/ScheduleListCa
 import ScheduleGridCardPlaceholder from '@/components/Placeholder/ScheduleGridCardPlaceholder.vue'
 import { times } from '@/stores/schedule.js'
 import { ru } from 'date-fns/locale/ru'
+import ScheduleAlert from '@/components/Schedule/ScheduleAlert.vue'
 
 const settingsStore = useSettingsStore()
 const profilesStore = useProfilesStore()

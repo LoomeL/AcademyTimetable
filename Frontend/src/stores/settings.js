@@ -5,7 +5,8 @@ export const useSettingsStore = defineStore('settings', () => {
   const getSettings = () => {
     let defaults = {
       darkTheme: true,
-      gridView: false
+      gridView: false,
+      hideGridAlert: false,
     }
     const settings = JSON.parse(localStorage.getItem('settings')) || {}
     if (settings) {
