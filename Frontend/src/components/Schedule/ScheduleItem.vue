@@ -1,5 +1,9 @@
 <template>
-  <div class="position-relative fw-light" @click="showOverlay = !showOverlay" :class="{'grid-item--active': showTime && isCurrent}">
+  <div
+    class="position-relative fw-light"
+    @click="showOverlay = !showOverlay"
+    :class="{ 'grid-item--active': showTime && isCurrent }"
+  >
     <div class="d-flex flex-column gap-1 p-3 z-1">
       <span v-if="current.subject" class="fw-normal">{{ current.subject }}</span>
       <div class="d-flex flex-wrap column-gap-2 align-items-center">
@@ -73,7 +77,9 @@ const scheduleStore = useScheduleStore()
 const startTime = computed(() => parse(time.value[0], 'HH:mm', scheduleStore.liveDate))
 const endTime = computed(() => parse(time.value[1], 'HH:mm', scheduleStore.liveDate))
 
-const isCurrent = computed(() => startTime.value <= scheduleStore.liveDate && scheduleStore.liveDate <= endTime.value)
+const isCurrent = computed(
+  () => startTime.value <= scheduleStore.liveDate && scheduleStore.liveDate <= endTime.value
+)
 
 const timeMessage = computed(() => {
   function formatMinutes(num) {
@@ -95,7 +101,7 @@ const timeMessage = computed(() => {
 
   if (scheduleStore.liveDate < startTime.value) {
     if (Math.abs(startDiff) > 6) return ''
-    return `Начнется через ${Math.abs(startDiff) !== 1 ? formatMinutes(Math.abs(startDiff - 1)) : "1 минуту"}`
+    return `Начнется через ${Math.abs(startDiff) !== 1 ? formatMinutes(Math.abs(startDiff - 1)) : '1 минуту'}`
   }
 
   if (isCurrent.value) {
@@ -111,7 +117,7 @@ const timeMessage = computed(() => {
       if (endDiff + 1 < 60) {
         return `Осталось ${formatMinutes(endDiff + 1)}`
       } else {
-        return `Остался 1 час ${endDiff - 59 === 0 ? "" : formatMinutes(endDiff - 59)}`
+        return `Остался 1 час ${endDiff - 59 === 0 ? '' : formatMinutes(endDiff - 59)}`
       }
     }
   }
@@ -125,14 +131,17 @@ const timeMessage = computed(() => {
 
 const colorOfType = computed(() => {
   const colors = {
-    "лекция" : "#ff6000",
-    "практика" : "#00f",
-    "семинары" : "#22a744",
-    "лекция и практика" : "#f53f93",
-    "пр. занятие" : "rgb(34 185 87)",
+    лекция: '#ff6000',
+    практика: '#00f',
+    семинары: '#22a744',
+    'лекция и практика': '#f53f93',
+    'пр. занятие': 'rgb(34 185 87)'
   }
-  return /лаб/.test(current.value.type) ? "#d01eb2" :
-    colors[current.value.type] ? colors[current.value.type] : ""
+  return /лаб/.test(current.value.type)
+    ? '#d01eb2'
+    : colors[current.value.type]
+      ? colors[current.value.type]
+      : ''
 })
 
 const props = defineProps({

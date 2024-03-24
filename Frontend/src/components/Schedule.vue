@@ -97,9 +97,15 @@
             :show-time="!showNextDay"
           />
         </template>
-        <div class="d-flex justify-content-center align-items-center flex-column py-3" v-if="(currentSchedule && Object.keys(currentSchedule).length === 0) && (currentAitSchedule && Object.keys(currentAitSchedule).length === 0)">
+        <div
+          class="d-flex justify-content-center align-items-center flex-column py-3"
+          v-if="
+            Object.keys(currentSchedule).length === 0 &&
+            (!currentAitSchedule || Object.keys(currentAitSchedule).length === 0)
+          "
+        >
           <h5>Занятий нет</h5>
-          <p class="m-0">{{showNextDay? "Завтра" : "Сегодня"}} можно отдыхать</p>
+          <p class="m-0">{{ showNextDay ? 'Завтра' : 'Сегодня' }} можно отдыхать</p>
         </div>
       </div>
     </div>
@@ -288,8 +294,7 @@ const weeklyScheduleList = computed(() => {
   if (props.loading) return null
   return props.rawSfuTT.timetable.reduce((accumulator, item) => {
     if (!props.rawAitTT) {
-      if (item.week === (showEvenWeek.value ? '1' : '2'))
-        return accumulator
+      if (item.week === (showEvenWeek.value ? '1' : '2')) return accumulator
     } else {
       if (item.week === (!(selectedWeek.value % 2) ? '1' : '2')) return accumulator
     }

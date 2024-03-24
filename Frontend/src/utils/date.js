@@ -1,7 +1,7 @@
-import { format, getISOWeek } from 'date-fns'
+import { addDays, format, getISOWeek } from 'date-fns'
 import { ru } from 'date-fns/locale/ru'
 
-export const today = new Date()
+export const today = addDays(new Date(), -1)
 
 export const currentWeek = getISOWeek(today)
 
